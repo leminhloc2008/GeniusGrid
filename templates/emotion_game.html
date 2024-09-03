@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}Emotion Recognition{% endblock %}
+
+{% block head %}
+{{ super() }}
+<style>
+    .emoji {
+        font-size: 100px;
+        text-align: center;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-4xl font-bold text-center mb-8">Learn to express emotions!</h1>
+
+    <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl mb-8">
+        <div class="md:flex">
+            <div class="p-8">
+                <div class="uppercase tracking-wide text-sm text-indigo-500 font-semibold mb-4">Emotion Challenge</div>
+                <p class="mt-2 text-gray-500">Try to express this emotion on your face:</p>
+                <div id="targetEmotion" class="emoji mt-4"></div>
+                <button id="newEmotionBtn" class="mt-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    New Emotion
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl mb-8">
+        <div class="md:flex">
+            <div class="p-8">
+                <div class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">Take Photo</div>
+                <video id="video" width="400" height="300" autoplay class="mt-4 rounded-lg"></video>
+                <button id="captureBtn" class="mt-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                    Chụp Ảnh
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="result" class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl mb-8 hidden">
+        <div class="md:flex">
+            <div class="p-8">
+                <div class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">Result</div>
+                <p id="feedback" class="mt-2 text-gray-500"></p>
+                <p id="confidence" class="mt-2 text-gray-500"></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    const video = document.getElementById('video');
+    const captureBtn = document.getElementById('captureBtn');
+    const newEmotionBtn = document.getElementById('newEmotionBtn');
+    const targetEmotionDiv = document.getElementById('targetEmotion');
+    const resultDiv = document.getElementById('result');
+    const feedbackP = document.getElementById('feedback');
+    const confidenceP = document.getElementById('confidence');
+
+    let targetEmotion = '';
+
+    const emotionEmojis = {
+        'angry': '😠',
+        'disgust': '🤢',
+        'fear': '😨',
+        'happy': '😄',
+        'sad': '😢',
+        'surprise': '😲',
+        'neutral': '😐'
+    };
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            video.srcObject = stream;
+        })
+        .catch(err => console.error(err));
+
+    function getRandomEmotion() {
+        axios.get('{{ url_for("get_random_emotion") }}')
+            .then(response => {
+                targetEmotion = response.data.emotion;
+                targetEmotionDiv.textContent = emotionEmojis[targetEmotion];
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    newEmotionBtn.addEventListener('click', getRandomEmotion);
+
+    captureBtn.addEventListener('click', () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        const imageDataUrl = canvas.toDataURL('image/jpeg');
+
+        axios.post('{{ url_for("analyze_emotion") }}', {
+            image: imageDataUrl,
+            target_emotion: targetEmotion
+        })
+        .then(response => {
+            feedbackP.textContent = response.data.feedback;
+            confidenceP.textContent = `Độ chính xác: ${(response.data.confidence * 100).toFixed(2)}%`;
+            resultDiv.classList.remove('hidden');
+        })
+        .catch(error => console.error('Error:', error));
+    });
+
+    getRandomEmotion();
+</script>
+{% endblock %}

@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}AAC Web Application{% endblock %}
+
+{% block nav_title %}AAC Web Application{% endblock %}
+
+{% block content %}
+<div x-data="{ activeCategory: 'all', message: '' }">
+    <section id="intro" class="mb-12 text-center">
+        <h2 class="text-3xl font-bold mb-4">Welcome to our AAC Platform</h2>
+        <p class="text-xl text-gray-600">Empowering communication through innovative technology</p>
+    </section>
+
+    <section id="categories" class="mb-8">
+        <h3 class="text-2xl font-semibold mb-4">Symbol Categories</h3>
+        <div class="flex flex-wrap gap-2" id="categoryContainer">
+            <button @click="activeCategory = 'all'"
+                    :class="{'bg-blue-500 text-white': activeCategory === 'all', 'bg-gray-200 text-gray-700': activeCategory !== 'all'}"
+                    class="px-4 py-2 rounded-full transition duration-300">
+                All
+            </button>
+            <!-- Category buttons will be added here dynamically -->
+        </div>
+    </section>
+
+    <section id="symbolBoard" class="mb-12">
+        <h3 class="text-2xl font-semibold mb-4">Communication Board</h3>
+        <div id="symbolsContainer" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <!-- Symbols will be added here dynamically -->
+        </div>
+    </section>
+
+    <section id="messageComposer" class="mb-12">
+        <h3 class="text-2xl font-semibold mb-4">Message Composer</h3>
+        <div class="bg-white p-4 rounded-lg shadow">
+            <textarea x-model="message" class="w-full p-2 border rounded" rows="3" placeholder="Your message will appear here..."></textarea>
+            <div class="mt-4 flex justify-between">
+                <button @click="speak(message)" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-300">Speak Message</button>
+                <button @click="message = ''" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-300">Clear Message</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="mb-12">
+        <h3 class="text-2xl font-semibold mb-4">Key Features</h3>
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h4 class="text-xl font-semibold mb-2">Intuitive Symbol Board</h4>
+                <p>Easily navigate through categories and select symbols to communicate effectively.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h4 class="text-xl font-semibold mb-2">Text-to-Speech</h4>
+                <p>Convert your composed messages into clear, audible speech with a single click.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h4 class="text-xl font-semibold mb-2">Customizable Categories</h4>
+                <p>Organize symbols into categories for quick and easy access to frequently used phrases.</p>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetchCategories();
+        fetchSymbols();
+    });
+
+    function fetchCategories() {
+        fetch('/api/categories')
+            .then(response => response.json())
+            .then(categories => {
+                const container = document.getElementById('categoryContainer');
+                categories.forEach(category => {
+                    const button = document.createElement('button');
+                    button.textContent = category;
+                    button.className = 'px-4 py-2 rounded-full transition duration-300';
+                    button.setAttribute('@click', `activeCategory = '${category}'`);
+                    button.setAttribute(':class', `{'bg-blue-500 text-white': activeCategory === '${category}', 'bg-gray-200 text-gray-700': activeCategory !== '${category}'}`);
+                    container.appendChild(button);
+                });
+            });
+    }
+
+    function fetchSymbols() {
+        fetch('/api/symbols')
+            .then(response => response.json())
+            .then(symbols => {
+                const container = document.getElementById('symbolsContainer');
+                symbols.forEach(symbol => {
+                    const div = document.createElement('div');
+                    div.className = 'bg-white p-4 rounded-lg shadow text-center cursor-pointer hover:bg-blue-100 transition duration-300';
+                    div.setAttribute('x-show', `activeCategory === 'all' || activeCategory === '${symbol.category}'`);
+                    div.innerHTML = `
+                        <img src="${symbol.image_url}" alt="${symbol.name}" class="w-24 h-24 mx-auto mb-2 object-contain">
+                        <p class="font-semibold">${symbol.name}</p>
+                    `;
+                    div.addEventListener('click', () => addToMessage(symbol.name));
+                    container.appendChild(div);
+                });
+            });
+    }
+
+    function addToMessage(text) {
+        const messageComposer = document.querySelector('[x-model="message"]');
+        messageComposer.value += (messageComposer.value ? ' ' : '') + text;
+        messageComposer.dispatchEvent(new Event('input'));
+    }
+
+    function speak(text) {
+        fetch('/api/speak', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({text: text}),
+        })
+        .then(response => response.json())
+        .then(data => {
+            const utterance = new SpeechSynthesisUtterance(data.text);
+            speechSynthesis.speak(utterance);
+        });
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,383 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-white">
+    <div class="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h1 class="text-4xl font-extrabold sm:text-5xl md:text-6xl">
+                Welcome to the Autism Learning Platform
+            </h1>
+            <p class="mt-6 max-w-2xl mx-auto text-xl">
+                Empowering individuals with autism through interactive learning experiences
+            </p>
+            <div class="mt-10 flex justify-center">
+                <a href="{{ url_for('dashboard') }}" class="px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10">
+                    Get Started
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="py-12 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="lg:text-center">
+            <h2 class="text-base text-indigo-600 font-semibold tracking-wide uppercase">Our Games</h2>
+            <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                Discover Our Interactive Learning Experiences
+            </p>
+        </div>
+
+        <div class="mt-10">
+            <div class="space-y-10 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-10">
+                <div class="relative" data-aos="fade-up">
+                    <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div class="ml-16">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Emotion Game</h3>
+                        <p class="mt-2 text-base text-gray-500">
+                            Practice recognizing and expressing emotions through our interactive webcam-based game.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="relative" data-aos="fade-up" data-aos-delay="200">
+                    <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                        </svg>
+                    </div>
+                    <div class="ml-16">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Chat Game</h3>
+                        <p class="mt-2 text-base text-gray-500">
+                            Improve your conversation skills with our AI-powered chatbot in various everyday scenarios.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="relative" data-aos="fade-up" data-aos-delay="400">
+                    <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div class="ml-16">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Action Recognition</h3>
+                        <p class="mt-2 text-base text-gray-500">
+                            Learn and practice various behaviors through our action recognition game using computer vision.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="relative" data-aos="fade-up" data-aos-delay="600">
+                    <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <div class="ml-16">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Image Reader</h3>
+                        <p class="mt-2 text-base text-gray-500">
+                            Enhance your reading skills with our image-to-text game that reads aloud the content of images.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="bg-indigo-700">
+    <div class="max-w-2xl mx-auto text-center py-16 px-4 sm:py-20 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-extrabold text-white sm:text-4xl">
+            <span class="block">Boost your learning journey.</span>
+            <span class="block">Start using our platform today.</span>
+        </h2>
+        <p class="mt-4 text-lg leading-6 text-indigo-200">
+            Join thousands of users who have improved their skills using our interactive games and personalized feedback.
+        </p>
+        <a href="{{ url_for('dashboard') }}" class="mt-8 w-full inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-indigo-50 sm:w-auto">
+            Get started
+        </a>
+    </div>
+</div>
+
+<div class="bg-white">
+    <div class="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h2 class="text-base font-semibold text-indigo-600 tracking-wide uppercase">Testimonials</h2>
+            <p class="mt-1 text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">Hear from our users</p>
+            <p class="max-w-xl mt-5 mx-auto text-xl text-gray-500">Discover how our platform has helped individuals with autism improve their skills and confidence.</p>
+        </div>
+        <div class="mt-12">
+            <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+                <div class="pt-6" data-aos="fade-up">
+                    <div class="flow-root bg-gray-50 rounded-lg px-6 pb-8">
+                        <div class="-mt-6">
+                            <div class="inline-flex items-center justify-center p-3 bg-indigo-500 rounded-md shadow-lg">
+                                <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <h3 class="mt-8 text-lg font-medium text-gray-900 tracking-tight">Improved Social Skills</h3>
+                            <p class="mt-5 text-base text-gray-500">
+                                "The chat game has significantly improved my ability to engage in conversations. I feel more confident in social situations now."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="flow-root bg-gray-50 rounded-lg px-6 pb-8">
+                        <div class="-mt-6">
+                            <div class="inline-flex items-center justify-center p-3 bg-indigo-500 rounded-md shadow-lg">
+                                <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <h3 class="mt-8 text-lg font-medium text-gray-900 tracking-tight">Better Emotion Recognition</h3>
+                            <p class="mt-5 text-base text-gray-500">
+                                "The emotion game has helped me understand facial expressions better. I can now identify emotions more accurately in real-life situations."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="flow-root bg-gray-50 rounded-lg px-6 pb-8">
+                        <div class="-mt-6">
+                            <div class="inline-flex items-center justify-center p-3 bg-indigo-500 rounded-md shadow-lg">
+                                <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <h3 class="mt-8 text-lg font-medium text-gray-900 tracking-tight">Enhanced Reading Skills</h3>
+                            <p class="mt-5 text-base text-gray-500">
+                                "The image reader game has made reading more enjoyable for me. It's helped improve my comprehension and vocabulary."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="bg-gray-100 py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="lg:text-center">
+            <h2 class="text-base text-indigo-600 font-semibold tracking-wide uppercase">Autism Awareness</h2>
+            <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                Understanding Autism Spectrum Disorder
+            </p>
+            <p class="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
+                Autism Spectrum Disorder (ASD) affects millions of individuals worldwide. Here are some key statistics and information to help increase awareness and understanding.
+            </p>
+        </div>
+
+        <div class="mt-10">
+            <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                <div class="bg-white overflow-hidden shadow-lg rounded-lg" data-aos="fade-up">
+                    <div class="p-6">
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">Prevalence</h3>
+                        <canvas id="prevalenceChart"></canvas>
+                        <p class="mt-4 text-sm text-gray-600">According to the CDC, approximately 1 in 54 children in the U.S. is diagnosed with ASD.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white overflow-hidden shadow-lg rounded-lg" data-aos="fade-up" data-aos-delay="200">
+                    <div class="p-6">
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">Gender Distribution</h3>
+                        <canvas id="genderChart"></canvas>
+                        <p class="mt-4 text-sm text-gray-600">ASD is about 4 times more common among boys than among girls.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white overflow-hidden shadow-lg rounded-lg" data-aos="fade-up" data-aos-delay="400">
+                    <div class="p-6">
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">Early Intervention</h3>
+                        <p class="text-3xl font-bold text-indigo-600">2 years old</p>
+                        <p class="mt-4 text-sm text-gray-600">ASD can be reliably diagnosed as early as age 2, allowing for early intervention which can significantly improve outcomes.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 bg-white overflow-hidden shadow-lg rounded-lg" data-aos="fade-up">
+                <div class="p-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Common Signs of ASD</h3>
+                    <ul class="list-disc pl-5 space-y-2 text-sm text-gray-600">
+                        <li>Difficulty with social interaction and communication</li>
+                        <li>Restricted or repetitive behaviors and interests</li>
+                        <li>Challenges with verbal and non-verbal communication</li>
+                        <li>Difficulty understanding other people's feelings or perspectives</li>
+                        <li>Sensory sensitivities (e.g., to sounds, lights, textures)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="bg-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="lg:text-center">
+            <h2 class="text-base text-indigo-600 font-semibold tracking-wide uppercase">Our Team</h2>
+            <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                Meet the Developers
+            </p>
+            <p class="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
+                Our passionate team is dedicated to creating innovative solutions for individuals with autism.
+            </p>
+        </div>
+
+        <div class="mt-10">
+            <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                <!-- Developer 1 -->
+                <div class="bg-white overflow-hidden shadow-lg rounded-lg" data-aos="fade-up">
+                    <div class="p-6">
+                        <img class="h-40 w-40 rounded-full mx-auto" src="https://scontent.fdad2-1.fna.fbcdn.net/v/t1.15752-9/454492981_536743355455447_1128037334489638277_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeHeZCumYKqcTSWJi6Bh8_RuKNp58_5Zh8wo2nnz_lmHzGzMYl_zOOeorYNZ_n8J3ZYviMuJplvYdxE-s0fIIOk8&_nc_ohc=qhe2kt5EEGcQ7kNvgFc5uo6&_nc_ht=scontent.fdad2-1.fna&oh=03_Q7cD1QFOHeEdmG9uKpLqnAK-xerT1-dqikNA5wyPSXNc7ul1ng&oe=66F1E255" alt="Sarah Johnson">
+                        <h3 class="mt-6 text-center text-lg font-medium text-gray-900">Pham Hoang Minh</h3>
+                        <p class="text-center text-indigo-600">Hoang Hoa Tham High School</p>
+                        <p class="mt-4 text-sm text-gray-600">Pham Hoang Minh is 16 years old. He's passionate about creating inclusive technology for individuals with autism.</p>
+                        <div class="mt-6 flex justify-center space-x-4">
+                            <a href="#" class="text-gray-400 hover:text-gray-500">
+                                <span class="sr-only">LinkedIn</span>
+                                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248H8.014v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.711zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z" clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-gray-500">
+                                <span class="sr-only">GitHub</span>
+                                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Developer 2 -->
+                <div class="bg-white overflow-hidden shadow-lg rounded-lg" data-aos="fade-up" data-aos-delay="200">
+                    <div class="p-6">
+                        <img class="h-40 w-40 rounded-full mx-auto" src="https://scontent.fdad1-3.fna.fbcdn.net/v/t1.15752-9/454769746_1339766016984467_3421884369123358767_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeGCsBUSZ6dylE7TPCupBvg6H-T7ASe-Xw0f5PsBJ75fDZx54fOHrSklOcJZ52neuWBt4RwtcUfbEiC0khPLjajx&_nc_ohc=ScjLN3fi2tQQ7kNvgEcODdT&_nc_ht=scontent.fdad1-3.fna&oh=03_Q7cD1QFuhGaADFQzksEKbsa-nkU_NS5Mrx608gkdYuIt6zZCew&oe=66F20A59" alt="Michael Chen">
+                        <h3 class="mt-6 text-center text-lg font-medium text-gray-900">Le Minh Loc</h3>
+                        <p class="text-center text-indigo-600">Le Quy Don High School</p>
+                        <p class="mt-4 text-sm text-gray-600">Le Minh Loc specializes in creating intuitive and accessible user interfaces. He works closely with autism specialists to ensure our platform meets the unique needs of our users.</p>
+                        <div class="mt-6 flex justify-center space-x-4">
+                            <a href="#" class="text-gray-400 hover:text-gray-500">
+                                <span class="sr-only">LinkedIn</span>
+                                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248H8.014v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.711zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z" clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-gray-500">
+                                <span class="sr-only">Dribbble</span>
+                                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c5.51 0 10-4.48 10-10S17.51 2 12 2zm6.605 4.61a8.502 8.502 0 011.93 5.314c-.281-.054-3.101-.629-5.943-.271-.065-.141-.12-.293-.184-.445a25.416 25.416 0 00-.564-1.236c3.145-1.28 4.577-3.124 4.761-3.362zM12 3.475c2.17 0 4.154.813 5.662 2.148-.152.216-1.443 1.941-4.48 3.08-1.399-2.57-2.95-4.675-3.189-5A8.687 8.687 0 0112 3.475zm-3.633.803a53.896 53.896 0 013.167 4.935c-3.992 1.063-7.517 1.04-7.896 1.04a8.581 8.581 0 014.729-5.975zM3.453 12.01v-.26c.37.01 4.512.065 8.775-1.215.25.477.477.965.694 1.453-.109.033-.228.065-.336.098-4.404 1.42-6.747 5.303-6.942 5.629a8.522 8.522 0 01-2.19-5.705zM12 20.547a8.482 8.482 0 01-5.239-1.8c.152-.315 1.888-3.656 6.703-5.337.022-.01.033-.01.054-.022a35.318 35.318 0 011.823 6.475 8.4 8.4 0 01-3.341.684zm4.761-1.465c-.086-.52-.542-3.015-1.659-6.084 2.679-.423 5.022.271 5.314.369a8.468 8.468 0 01-3.655 5.715z" clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Developer 3 -->
+                <div class="bg-white overflow-hidden shadow-lg rounded-lg" data-aos="fade-up" data-aos-delay="400">
+                    <div class="p-6">
+                        <img class="h-40 w-40 rounded-full mx-auto" src="https://scontent.fdad1-1.fna.fbcdn.net/v/t1.15752-9/395664740_2241192169407454_2651339751486812727_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeGbiD5niYeFy71p7baK2hgSz2nAFUvzxbDPacAVS_PFsD6uwTr5Gqxzkgy22pykEVXhtOPYgouplm8i5Yuv0o2W&_nc_ohc=qF94VPR5SDYQ7kNvgGaWsbH&_nc_ht=scontent.fdad1-1.fna&oh=03_Q7cD1QFdmMBigGBAchHby6SzgzY1AlopbpXIt4Urze-HI03Xwg&oe=66F20F0E" alt="Emily Rodriguez">
+                        <h3 class="mt-6 text-center text-lg font-medium text-gray-900">Hoang Cong Bao Long</h3>
+                        <p class="text-center text-indigo-600">Le Quy Don High School</p>
+                        <p class="mt-4 text-sm text-gray-600">Hoang Cong Bao Long leads our machine learning development, focusing on creating adaptive learning algorithms that personalize the experience for each user based on their unique needs and progress.</p>
+                        <div class="mt-6 flex justify-center space-x-4">
+                            <a href="#" class="text-gray-400 hover:text-gray-500">
+                                <span class="sr-only">LinkedIn</span>
+                                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248H8.014v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.711zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z" clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                            <<a href="#" class="text-gray-400 hover:text-gray-500">
+                                <span class="sr-only">GitHub</span>
+                                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    AOS.init({
+        duration: 1000,
+        once: true,
+    });
+
+    const prevalenceCtx = document.getElementById('prevalenceChart').getContext('2d');
+    new Chart(prevalenceCtx, {
+        type: 'pie',
+        data: {
+            labels: ['ASD Diagnosis', 'No ASD Diagnosis'],
+            datasets: [{
+                data: [1, 53],
+                backgroundColor: ['#4F46E5', '#E5E7EB']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                }
+            }
+        }
+    });
+
+    const genderCtx = document.getElementById('genderChart').getContext('2d');
+    new Chart(genderCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Boys', 'Girls'],
+            datasets: [{
+                label: 'ASD Prevalence',
+                data: [4, 1],
+                backgroundColor: ['#4F46E5', '#EC4899']
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Relative Prevalence'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

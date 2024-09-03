@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="px-4 py-6 sm:px-0">
+    <h2 class="text-3xl font-extrabold text-gray-900 mb-8">Welcome back, {{ user.username }}!</h2>
+
+    <!-- Overall Progress -->
+    <div class="bg-white overflow-hidden shadow-lg rounded-lg mb-8">
+        <div class="p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-2">Your Learning Journey</h3>
+            <div class="flex items-center">
+                <div class="flex-1">
+                    <div class="relative pt-1">
+                        <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-indigo-200">
+                            <div style="width:{{ user.progress }}%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-indigo-500"></div>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600">Level {{ user.level }} - {{ user.progress }}% Complete</p>
+                </div>
+                <div class="ml-4">
+                    <span class="text-3xl font-bold text-indigo-600">{{ user.progress }}%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white overflow-hidden shadow-lg rounded-lg">
+            <div class="p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
+                        <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <h4 class="text-lg font-medium text-gray-900">Emotion Game</h4>
+                        <p class="mt-1 text-sm text-gray-500">Last played 2 days ago</p>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-2xl font-bold text-indigo-600">85%</span>
+                    <span class="text-sm text-gray-600 ml-2">Accuracy</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Repeat similar structure for Chat Game, Action Recognition, and Image Reader -->
+
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="bg-white overflow-hidden shadow-lg rounded-lg mb-8">
+        <div class="p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Recent Activity</h3>
+            <ul class="divide-y divide-gray-200">
+                <li class="py-4">
+                    <div class="flex space-x-3">
+                        <svg class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <div class="flex-1 space-y-1">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-sm font-medium">Completed Emotion Game</h3>
+                                <p class="text-sm text-gray-500">3 hours ago</p>
+                            </div>
+                            <p class="text-sm text-gray-500">Achieved 90% accuracy in recognizing happiness</p>
+                        </div>
+                    </div>
+                </li>
+                <!-- Add more activity items -->
+            </ul>
+        </div>
+    </div>
+
+    <!-- Weekly Progress Chart -->
+    <div class="bg-white overflow-hidden shadow-lg rounded-lg">
+        <div class="p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Weekly Progress</h3>
+            <canvas id="weeklyProgressChart"></canvas>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('weeklyProgressChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            datasets: [{
+                label: 'Daily Progress',
+                data: [20, 35, 45, 30, 55, 65, 70],
+                borderColor: 'rgb(99, 102, 241)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

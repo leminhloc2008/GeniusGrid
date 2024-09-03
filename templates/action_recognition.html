@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block title %}Action Recognition Challenge{% endblock %}
+
+{% block extra_head %}
+<style>
+    .video-container {
+        width: 640px;
+        height: 480px;
+        margin: 0 auto;
+        background-color: #f0f0f0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .progress-bar {
+        width: 100%;
+        height: 10px;
+        background-color: #e0e0e0;
+        border-radius: 5px;
+        overflow: hidden;
+        margin-top: 20px;
+    }
+    #timer-bar {
+        width: 100%;
+        height: 100%;
+        background-color: #4CAF50;
+        transition: width 0.1s linear;
+    }
+    .score-container {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 20px;
+    }
+    .score-item {
+        text-align: center;
+    }
+    .score-label {
+        font-size: 14px;
+        color: #666;
+    }
+    .score-value {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-center mb-8" data-aos="fade-down">Action Recognition Challenge</h1>
+
+    <div class="video-container mb-8" data-aos="zoom-in">
+        <img src="{{ url_for('video_feed') }}" alt="Video Feed" width="640" height="480">
+    </div>
+
+    <div id="feedback-container" class="bg-white p-4 rounded-lg shadow-md mb-8" data-aos="fade-up">
+        <div id="message" class="text-lg font-semibold text-center mb-2"></div>
+        <div id="instruction" class="text-center italic">{{ instruction }}</div>
+    </div>
+
+    <div id="action" class="text-2xl font-bold text-center mb-8" data-aos="fade-up">{{ action }}</div>
+
+    <div class="progress-bar" data-aos="fade-up">
+        <div id="timer-bar"></div>
+    </div>
+
+    <div class="score-container" data-aos="fade-up">
+        <div class="score-item">
+            <div class="score-label">Score</div>
+            <div class="score-value" id="score">0</div>
+        </div>
+        <div class="score-item">
+            <div class="score-label">Actions Completed</div>
+            <div class="score-value" id="actions-completed">0</div>
+        </div>
+        <div class="score-item">
+            <div class="score-label">Accuracy</div>
+            <div class="score-value" id="accuracy">0%</div>
+        </div>
+    </div>
+
+    <div id="streak-container" class="text-center mt-8" data-aos="fade-up">
+        <div class="score-label">Current Streak</div>
+        <div id="streak-value" class="text-4xl font-bold text-red-600">0</div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let score = 0;
+    let actionsCompleted = 0;
+    let totalAttempts = 0;
+    let streak = 0;
+    let timerInterval;
+    const timerDuration = 10; // 10 seconds for each action
+
+    function updateScores(completed) {
+        totalAttempts++;
+        if (completed) {
+            score += 10 * (streak + 1);
+            actionsCompleted++;
+            streak++;
+        } else {
+            streak = 0;
+        }
+        document.getElementById('score').textContent = score;
+        document.getElementById('actions-completed').textContent = actionsCompleted;
+        document.getElementById('accuracy').textContent = Math.round((actionsCompleted / totalAttempts) * 100) + '%';
+        document.getElementById('streak-value').textContent = streak;
+    }
+
+    function startTimer() {
+        let timeLeft = timerDuration;
+        const timerBar = document.getElementById('timer-bar');
+        clearInterval(timerInterval);
+
+        timerInterval = setInterval(() => {
+            timeLeft -= 0.1;
+            const width = (timeLeft / timerDuration) * 100;
+            timerBar.style.width = width + '%';
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                checkAction(false);
+            }
+        }, 100);
+    }
+
+    function checkAction(manualCheck = true) {
+        fetch('/check_action')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('message').textContent = data.message;
+                document.getElementById('instruction').textContent = data.instruction;
+
+                if (data.completed) {
+                    document.getElementById('action').textContent = data.new_action;
+                    updateScores(true);
+                    startTimer();
+                } else if (manualCheck) {
+                    updateScores(false);
+                }
+
+                // Apply different styles based on the feedback
+                const feedbackContainer = document.getElementById('feedback-container');
+                if (data.completed) {
+                    feedbackContainer.classList.add('bg-green-100');
+                    feedbackContainer.classList.remove('bg-red-100', 'bg-yellow-100');
+                } else if (data.message.includes("Time's up")) {
+                    feedbackContainer.classList.add('bg-red-100');
+                    feedbackContainer.classList.remove('bg-green-100', 'bg-yellow-100');
+                } else {
+                    feedbackContainer.classList.add('bg-yellow-100');
+                    feedbackContainer.classList.remove('bg-green-100', 'bg-red-100');
+                }
+
+                // If it's a new action, update the action text and instruction
+                if (data.new_action) {
+                    document.getElementById('action').textContent = data.new_action;
+                    document.getElementById('instruction').textContent = data.instruction;
+                }
+            });
+    }
+
+    // Start the game
+    startTimer();
+    setInterval(() => checkAction(false), 1000);
+
+    // Add keyboard controls
+    document.addEventListener('keydown', (event) => {
+        if (event.code === 'Space') {
+            event.preventDefault(); // Prevent scrolling
+            checkAction(true);
+        }
+    });
+</script>
+{% endblock %}

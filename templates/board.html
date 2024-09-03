@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Learning Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.31/vue.global.prod.min.js"></script>
+    <style>
+        [v-cloak] { display: none; }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div id="app" v-cloak class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold text-center mb-8">Emotion Learning Platform</h1>
+
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Current Emotion: {{ currentEmotion }}</h2>
+            <button @click="getNewEmotion" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Get New Emotion
+            </button>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Capture Your Expression</h2>
+            <video ref="video" class="w-full mb-4" autoplay></video>
+            <button @click="captureImage" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                Capture and Analyze
+            </button>
+        </div>
+
+        <div v-if="result" class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-2xl font-semibold mb-4">Result</h2>
+            <p class="mb-2"><strong>Detected Emotion:</strong> {{ result.detected_emotion }}</p>
+            <p class="mb-2"><strong>Match Percentage:</strong> {{ result.match_percentage.toFixed(2) }}%</p>
+            <p class="mb-2"><strong>Feedback:</strong> {{ result.feedback }}</p>
+        </div>
+    </div>
+
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    currentEmotion: '',
+                    result: null,
+                    video: null
+                }
+            },
+            mounted() {
+                this.getNewEmotion();
+                this.setupCamera();
+            },
+            methods: {
+                async getNewEmotion() {
+                    const response = await fetch('/get_random_emotion');
+                    const data = await response.json();
+                    this.currentEmotion = data.emotion;
+                },
+                setupCamera() {
+                    this.video = this.$refs.video;
+                    navigator.mediaDevices.getUserMedia({ video: true })
+                        .then(stream => {
+                            this.video.srcObject = stream;
+                        })
+                        .catch(error => {
+                            console.error('Error accessing camera:', error);
+                        });
+                },
+                async captureImage() {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = this.video.videoWidth;
+                    canvas.height = this.video.videoHeight;
+                    canvas.getContext('2d').drawImage(this.video, 0, 0);
+                    const imageData = canvas.toDataURL('image/jpeg');
+
+                    const response = await fetch('/check_emotion', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            image: imageData,
+                            emotion: this.currentEmotion
+                        })
+                    });
+                    this.result = await response.json();
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

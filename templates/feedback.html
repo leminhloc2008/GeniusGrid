@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="px-4 py-6 sm:px-0">
+    <h2 class="text-3xl font-extrabold text-gray-900 mb-8">Feedback and Insights</h2>
+
+    <!-- Overall Progress Summary -->
+    <div class="bg-white overflow-hidden shadow-lg rounded-lg mb-8">
+        <div class="p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Your Learning Journey</h3>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <p class="text-sm text-gray-600">Overall Progress</p>
+                    <p class="text-2xl font-bold text-indigo-600">75%</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-600">Time Spent Learning</p>
+                    <p class="text-2xl font-bold text-indigo-600">12.5 hours</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-600">Skills Improved</p>
+                    <p class="text-2xl font-bold text-indigo-600">7</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-600">Current Streak</p>
+                    <p class="text-2xl font-bold text-indigo-600">5 days</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Skill Breakdown -->
+    <div class="bg-white overflow-hidden shadow-lg rounded-lg mb-8">
+        <div class="p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Skill Breakdown</h3>
+            <div class="aspect-w-16 aspect-h-9 relative">
+                <canvas id="skillChart"></canvas>
+                <div id="fallbackSkillContent" class="absolute inset-0 flex flex-col justify-center items-center bg-white">
+                    <h4 class="text-lg font-medium text-gray-900 mb-4">Your Skill Levels</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="flex items-center">
+                            <div class="w-32 bg-gray-200 rounded-full mr-2">
+                                <div class="bg-indigo-600 text-xs font-medium text-indigo-100 text-center p-0.5 leading-none rounded-full" style="width: 65%">65%</div>
+                            </div>
+                            <span class="text-sm text-gray-600">Emotion Recognition</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-32 bg-gray-200 rounded-full mr-2">
+                                <div class="bg-indigo-600 text-xs font-medium text-indigo-100 text-center p-0.5 leading-none rounded-full" style="width: 59%">59%</div>
+                            </div>
+                            <span class="text-sm text-gray-600">Communication</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-32 bg-gray-200 rounded-full mr-2">
+                                <div class="bg-indigo-600 text-xs font-medium text-indigo-100 text-center p-0.5 leading-none rounded-full" style="width: 80%">80%</div>
+                            </div>
+                            <span class="text-sm text-gray-600">Social Interaction</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-32 bg-gray-200 rounded-full mr-2">
+                                <div class="bg-indigo-600 text-xs font-medium text-indigo-100 text-center p-0.5 leading-none rounded-full" style="width: 81%">81%</div>
+                            </div>
+                            <span class="text-sm text-gray-600">Motor Skills</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-32 bg-gray-200 rounded-full mr-2">
+                                <div class="bg-indigo-600 text-xs font-medium text-indigo-100 text-center p-0.5 leading-none rounded-full" style="width: 56%">56%</div>
+                            </div>
+                            <span class="text-sm text-gray-600">Reading Comprehension</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Feedback -->
+    <div class="bg-white overflow-hidden shadow-lg rounded-lg mb-8">
+        <div class="p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Recent Feedback</h3>
+            {% for feedback in feedbacks %}
+            <div class="mb-4 p-4 bg-gray-100 rounded-lg">
+                <p class="font-semibold">{{ feedback.game_type }}</p>
+                <p>{{ feedback.content }}</p>
+                <p class="text-sm text-gray-500 mt-2">{{ feedback.timestamp }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Personalized Recommendations -->
+    <div class="bg-white overflow-hidden shadow-lg rounded-lg mb-8">
+        <div class="p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Personalized Recommendations</h3>
+            <ul class="list-disc pl-5 space-y-2">
+                <li>Focus on improving your reaction time in the Emotion Game. Try the "Quick Recognition" mode to challenge yourself.</li>
+                <li>In the Chat Game, practice using more complex sentences and try to extend conversations for longer periods.</li>
+                <li>For Action Recognition, work on smoother transitions between poses. The "Flow Sequence" exercise might help.</li>
+                <li>In the Image Reader game, challenge yourself with more advanced texts. Try the "Scientific Articles" category.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Goal Setting -->
+    <div class="bg-white overflow-hidden shadow-lg rounded-lg">
+        <div class="p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Set Your Learning Goals</h3>
+            <form id="goal-form">
+                <div class="mb-4">
+                    <label for="goal-type" class="block text-sm font-medium text-gray-700">Goal Type</label>
+                    <select id="goal-type" name="goal-type" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                        <option>Daily practice time</option>
+                        <option>Skill improvement</option>
+                        <option>Game completion</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="goal-value" class="block text-sm font-medium text-gray-700">Goal Value</label>
+                    <input type="text" id="goal-value" name="goal-value" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                </div>
+                <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Set Goal
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("DOM Content Loaded");
+    const ctx = document.getElementById('skillChart');
+    const fallbackContent = document.getElementById('fallbackSkillContent');
+    console.log("Canvas element:", ctx);
+
+    if (ctx) {
+        console.log("Creating chart");
+        new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['Emotion Recognition', 'Communication', 'Social Interaction', 'Motor Skills', 'Reading Comprehension'],
+                datasets: [{
+                    label: 'Your Skills',
+                    data: [65, 59, 80, 81, 56],
+                    fill: true,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgb(75, 192, 192)',
+                    pointBackgroundColor: 'rgb(75, 192, 192)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgb(75, 192, 192)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                elements: {
+                    line: {
+                        borderWidth: 3
+                    }
+                },
+                scales: {
+                    r: {
+                        angleLines: {
+                            display: false
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                }
+            }
+        });
+
+        // Hide the fallback content if the chart is created successfully
+        if (fallbackContent) {
+            fallbackContent.style.display = 'none';
+        }
+    } else {
+        console.error("Canvas element not found");
+        // Ensure fallback content is visible if canvas is not found
+        if (fallbackContent) {
+            fallbackContent.style.display = 'flex';
+        }
+    }
+
+    document.getElementById('goal-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('Goal set successfully! We'll help you track your progress.');
+    });
+});
+</script>
+{% endblock %}

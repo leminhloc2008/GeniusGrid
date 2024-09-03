@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}{{ scenario.title }} - Role-Play Scenario{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-4xl font-bold mb-4 text-center text-indigo-600">{{ scenario.title }}</h1>
+    <p class="text-xl text-center mb-8">{{ scenario.description }}</p>
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div id="conversation" class="space-y-4 mb-6 h-64 overflow-y-auto"></div>
+        <div class="flex">
+            <input type="text" id="userInput" class="flex-grow border rounded-l px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Type your response...">
+            <button id="sendButton" class="bg-indigo-500 text-white px-6 py-2 rounded-r hover:bg-indigo-600 transition duration-300">Send</button>
+        </div>
+    </div>
+    <div class="text-center">
+        <a href="{{ url_for('index') }}" class="bg-gray-500 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-gray-600 transition duration-300">Back to Scenarios</a>
+    </div>
+</div>
+<script>
+    const conversation = document.getElementById('conversation');
+    const userInput = document.getElementById('userInput');
+    const sendButton = document.getElementById('sendButton');
+
+    function addMessage(text, isUser) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `p-3 rounded-lg ${isUser ? 'bg-indigo-100 ml-auto' : 'bg-gray-100'} max-w-3/4`;
+        messageDiv.textContent = text;
+        conversation.appendChild(messageDiv);
+        conversation.scrollTop = conversation.scrollHeight;
+    }
+
+    function sendMessage() {
+        const message = userInput.value.trim();
+        if (message) {
+            addMessage(message, true);
+            userInput.value = '';
+
+            fetch('/scenario/{{ scenario.id }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({user_input: message}),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    addMessage(data.error, false);
+                } else {
+                    addMessage(data.response, false);
+                }
+            });
+        }
+    }
+
+    sendButton.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+
+    // Initial system message
+    addMessage("Hello! I'm ready to start our role-play scenario. How would you like to begin?", false);
+</script>
+{% endblock %}
